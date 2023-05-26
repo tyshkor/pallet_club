@@ -70,24 +70,11 @@ pub mod pallet {
 	#[pallet::event]
 	#[pallet::generate_deposit(pub(super) fn deposit_event)]
 	pub enum Event<T: Config> {
-		ClubCreated {
-			club_id: ClubId,
-		},
-		MemberAdded {
-			member: T::AccountId,
-			club_id: ClubId,
-		},
-		NewOwner {
-			new_owner: T::AccountId,
-			club_id: ClubId,
-		},
-		MembershipExpencesPayed {
-			member: T::AccountId,
-			club_id: ClubId,
-		},
-		AnnualExpencesSet {
-			club_id: ClubId,
-		},
+		ClubCreated { club_id: ClubId },
+		MemberAdded { member: T::AccountId, club_id: ClubId },
+		NewOwner { new_owner: T::AccountId, club_id: ClubId },
+		MembershipExpencesPayed { member: T::AccountId, club_id: ClubId },
+		AnnualExpencesSet { club_id: ClubId },
 	}
 
 	// Errors inform users that something went wrong.

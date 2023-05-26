@@ -11,7 +11,7 @@ use sp_std::collections::btree_map::BTreeMap;
 #[benchmarks]
 mod benchmarks {
 	use super::*;
-	
+
 	#[benchmark]
 	fn create_club() {
 		let caller2: T::AccountId = whitelisted_caller();
