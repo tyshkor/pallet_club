@@ -18,9 +18,6 @@ mod benchmarking;
 pub mod weights;
 pub use weights::*;
 
-const SECOND_IN_YEAR: u32 = 31622400;
-const MAX_YEARS: u32 = 100;
-
 #[frame_support::pallet]
 pub mod pallet {
 	use super::*;
@@ -30,6 +27,9 @@ pub mod pallet {
 
 	pub type ClubId = u32;
 	pub type AccountId = u32;
+
+	const SECOND_IN_YEAR: u32 = 31622400;
+	const MAX_YEARS: u32 = 100;
 
 	#[pallet::storage]
 	pub type PalletStorage<T: Config> = StorageMap<
@@ -123,6 +123,29 @@ pub mod pallet {
 			Ok(())
 		}
 
+		// Add a new member to your club
+		#[pallet::call_index(6)]
+		#[pallet::weight(<T as pallet::Config>::WeightInfo::add_member())]
+		pub fn add_member(
+			origin: OriginFor<T>,
+			club_id: ClubId,
+			member: T::AccountId,
+		) -> DispatchResult {
+			let owner = ensure_signed(origin.clone())?;
+			ensure_owner::<T>(origin, club_id)?;
+			let mut club = PalletStorage::<T>::get(club_id).unwrap(); // need to fix the wrapping
+
+			T::Currency::transfer(&member, &owner, 1u32.into(), AllowDeath)?;
+
+			let now = <timestamp::Pallet<T>>::get();
+			club.members.insert(member.clone(), now);
+
+			PalletStorage::<T>::insert(club_id, club);
+			Self::deposit_event(Event::MemberAdded { member, club_id });
+			Ok(())
+		}
+
+		// Change owner of the club
 		#[pallet::call_index(3)]
 		#[pallet::weight(<T as pallet::Config>::WeightInfo::transfer_ownership())]
 		pub fn transfer_ownership(
@@ -158,6 +181,7 @@ pub mod pallet {
 			Ok(())
 		}
 
+		// Pay for being a member
 		#[pallet::call_index(5)]
 		#[pallet::weight(<T as pallet::Config>::WeightInfo::pay_membership_expense())]
 		pub fn pay_membership_expense(
@@ -185,27 +209,6 @@ pub mod pallet {
 
 			PalletStorage::<T>::insert(club_id, club);
 			Self::deposit_event(Event::MembershipExpencesPayed { member: caller, club_id });
-			Ok(())
-		}
-
-		#[pallet::call_index(6)]
-		#[pallet::weight(<T as pallet::Config>::WeightInfo::add_member())]
-		pub fn add_member(
-			origin: OriginFor<T>,
-			club_id: ClubId,
-			member: T::AccountId,
-		) -> DispatchResult {
-			let owner = ensure_signed(origin.clone())?;
-			ensure_owner::<T>(origin, club_id)?;
-			let mut club = PalletStorage::<T>::get(club_id).unwrap(); // need to fix the wrapping
-
-			T::Currency::transfer(&member, &owner, 1u32.into(), AllowDeath)?;
-
-			let now = <timestamp::Pallet<T>>::get();
-			club.members.insert(member.clone(), now);
-
-			PalletStorage::<T>::insert(club_id, club);
-			Self::deposit_event(Event::MemberAdded { member, club_id });
 			Ok(())
 		}
 	}
