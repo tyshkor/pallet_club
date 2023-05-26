@@ -35,8 +35,6 @@ use core::marker::PhantomData;
 
 /// Weight functions needed for pallet_club.
 pub trait WeightInfo {
-	fn do_something() -> Weight;
-	fn cause_error() -> Weight;
 	fn create_club() -> Weight;
 	fn add_member() -> Weight;
 	fn transfer_ownership() -> Weight;
