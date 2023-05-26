@@ -46,14 +46,13 @@ mod benchmarks {
 
 		let club_id = 5;
 
-		PalletStorage::<T>::insert(club_id, Club {
-			owner: owner.clone(),
-			members: Default::default(),
-			annual_expenses: 1u32,
-		});
+		PalletStorage::<T>::insert(
+			club_id,
+			Club { owner: owner.clone(), members: Default::default(), annual_expenses: 1u32 },
+		);
 
 		#[extrinsic_call]
-		add_member(RawOrigin::Signed(owner), club_id, member);	
+		add_member(RawOrigin::Signed(owner), club_id, member);
 	}
 
 	#[benchmark]
@@ -62,11 +61,10 @@ mod benchmarks {
 		let new_owner: T::AccountId = whitelisted_caller();
 		let club_id = 5;
 
-		PalletStorage::<T>::insert(club_id, Club {
-			owner: owner.clone(),
-			members: Default::default(),
-			annual_expenses: 1u32,
-		});
+		PalletStorage::<T>::insert(
+			club_id,
+			Club { owner: owner.clone(), members: Default::default(), annual_expenses: 1u32 },
+		);
 
 		#[extrinsic_call]
 		transfer_ownership(RawOrigin::Signed(owner), new_owner, club_id);
@@ -78,14 +76,13 @@ mod benchmarks {
 
 		let club_id = 5;
 
-		PalletStorage::<T>::insert(club_id, Club {
-			owner: owner.clone(),
-			members: Default::default(),
-			annual_expenses: 1u32,
-		});
+		PalletStorage::<T>::insert(
+			club_id,
+			Club { owner: owner.clone(), members: Default::default(), annual_expenses: 1u32 },
+		);
 
 		#[extrinsic_call]
-		set_annual_expense(RawOrigin::Signed(owner), club_id, 2u32);	
+		set_annual_expense(RawOrigin::Signed(owner), club_id, 2u32);
 	}
 
 	#[benchmark]
@@ -99,13 +96,12 @@ mod benchmarks {
 
 		members.insert(member.clone(), T::Moment::from(89u32));
 
-		PalletStorage::<T>::insert(club_id, Club {
-			owner: owner.clone(),
-			members,
-			annual_expenses: 1u32,
-		});
+		PalletStorage::<T>::insert(
+			club_id,
+			Club { owner: owner.clone(), members, annual_expenses: 1u32 },
+		);
 
 		#[extrinsic_call]
-		pay_membership_expense(RawOrigin::Signed(member), club_id, 2u32);	
+		pay_membership_expense(RawOrigin::Signed(member), club_id, 2u32);
 	}
 }
