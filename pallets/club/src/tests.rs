@@ -70,7 +70,7 @@ fn pay_membership_expense_too_many_tokens_test() {
 		assert_ok!(TemplateModule::create_club(RuntimeOrigin::root(), 56, 5, 1u32));
 		assert_ok!(TemplateModule::add_member(RuntimeOrigin::signed(56), 5, 57));
 		assert_noop!(
-			TemplateModule::pay_membership_expense(RuntimeOrigin::signed(57), 5, 57),
+			TemplateModule::pay_membership_expense(RuntimeOrigin::signed(57), 5, 102),
 			Error::<Test>::TooManyTokens,
 		);
 	});
