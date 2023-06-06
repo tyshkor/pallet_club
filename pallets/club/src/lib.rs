@@ -119,7 +119,7 @@ pub mod pallet {
 				club_id,
 				Club { owner, members: Default::default(), annual_expenses },
 			);
-
+			Self::deposit_event(Event::ClubCreated { club_id });
 			Ok(())
 		}
 
@@ -194,7 +194,7 @@ pub mod pallet {
 			let mut club = PalletStorage::<T>::get(club_id).ok_or(Error::<T>::ClubDoesNotExist)?;
 			club.members.get(&caller).ok_or(Error::<T>::ClubDoesNotExist)?;
 
-			if club.annual_expenses * MAX_YEARS >= expense {
+			if club.annual_expenses * MAX_YEARS < expense {
 				return Err(Error::<T>::TooManyTokens.into())
 			}
 
